@@ -40,10 +40,11 @@ int main(int argc, char **argv)
 
 	pid_t pid = getpid();
 
-	// NOTE: `O_WRONLY` only enables file for writing
-	// NOTE: `O_CREAT` creates the requested file if absent
-	// NOTE: `O_TRUNC` empties the file prior to opening
-	// NOTE: `O_APPEND` subsequent writes are being appended instead of overwritten
+	// `O_WRONLY` файл для записи
+	// `O_CREAT` Если файл не существует, он будет создан.
+	// `O_TRUNC`Если файл существует и успешно открывается на запись либо
+	// на чтение и запись, то его размер усекается до нуля.
+	// `O_APPEND` Запись производится в конец файла.
 	int32_t file = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 0600);
 	if (file == -1)
 	{
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
 		}
 		else if (buf[0] == '\n')
 		{
-			// NOTE: When Enter is pressed with no input, then exit client
+			// завершение ввода
 			break;
 		}
 
@@ -130,8 +131,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	// NOTE: Write EOF to final file
-	// TODO: Check for count of actual bytes written
+	// записываем последний символ в файл
 	const char term = '\0';
 	write(file, &term, sizeof(term));
 
